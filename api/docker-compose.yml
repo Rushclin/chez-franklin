@@ -1,0 +1,33 @@
+version: "3"
+name: chez_franklin
+
+volumes:
+  chez_franklin_driver:
+    driver: local
+  chez_franklin_data:
+    driver: local
+
+services:
+  postgres:
+    image: postgres:13
+    volumes:
+      - chez_franklin_driver:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: chez_franklin
+      POSTGRES_USER: chez_franklin
+      POSTGRES_PASSWORD: chez_franklin
+    ports:
+      - 5442:5432
+
+  chez_franklin_file:
+    image: bytemark/webdav
+    volumes:
+      - chez_franklin_data:/var/lib/dav
+    environment:
+      AUTH_TYPE: Basic
+      USERNAME: chez_franklin
+      PASSWORD: chez_franklin
+      ANONYMOUS_METHODS: GET,OPTIONS,PROPFIND
+    ports:
+      - 9090:80
+  
